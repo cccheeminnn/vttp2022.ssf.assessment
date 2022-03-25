@@ -39,16 +39,24 @@ public class PurchaseOrderRestController {
     
             List<String> items = new ArrayList<>();
             
+            //for loop to add all fruits' name into items, an ArrayList<String>();
             for (int i = 0; i < jArray.size(); i++) 
             {
                 items.add(jArray.getJsonObject(i).getJsonString("item").toString());
             }
-    
+            
+            //instantiate a Quotation object and make it optional
             Quotation quotation = new Quotation();
             Optional<Quotation> quotationOptional = Optional.of(quotation);
+
+            //the instantiated Quotation object goes to get quotations from the API
             quotationOptional = quotationSvc.getQuotations(items);
+
+            //parse in the Quotation object, jArray with the purchase order details, items which is
+            //our list of fruits' name
             Float totalCost = quotationSvc.calculateTotalCost(quotationOptional, jArray, items);
-    
+            
+            //build a JsonObject to send back as ResponseEntity
             JsonObject totalCostJObj = Json.createObjectBuilder()
                 .add("invoiceId", quotationOptional.get().getQuoteId())
                 .add("name", jObj.getString("name"))
@@ -56,7 +64,7 @@ public class PurchaseOrderRestController {
                 .build();
     
             return ResponseEntity.ok(totalCostJObj.toString());
-
+        //Whenever an error occurs an empty JsonObject is returned with a 404 status code
         } catch (Exception ex) {
             JsonObject emptyJObj = Json.createObjectBuilder()
                 .build();

@@ -34,6 +34,7 @@ class AssessmentApplicationTests {
 		Quotation quotation = new Quotation();
 		Optional<Quotation> quotationOptional = Optional.of(quotation);
 		
+		//try calling the method and if an error exception occurs the catch would do Assertions
 		try {
 			quotationOptional = quotationSvc.getQuotations(testList1);
 		} catch (HttpClientErrorException ex) {
